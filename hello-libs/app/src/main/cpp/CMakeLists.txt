@@ -32,7 +32,12 @@ add_library(lib_gperf SHARED IMPORTED)
 set_target_properties(lib_gperf PROPERTIES IMPORTED_LOCATION
     ${distribution_DIR}/gperf/lib/${ANDROID_ABI}/libgperf.so)
 
-# build application's shared lib
+# the most valuable thing of this sample, the rest are pretty much normal cmake
+add_library(lib_listen SHARED IMPORTED)
+set_target_properties(lib_listen PROPERTIES IMPORTED_LOCATION
+        ${distribution_DIR}/listen/lib/${ANDROID_ABI}/liblisten.so)
+
+# build application's shared lib 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 
 add_library(hello-libs SHARED
@@ -40,7 +45,8 @@ add_library(hello-libs SHARED
 
 target_include_directories(hello-libs PRIVATE
                            ${distribution_DIR}/gmath/include
-                           ${distribution_DIR}/gperf/include)
+                           ${distribution_DIR}/gperf/include
+                           ${distribution_DIR}/listen/include)
 
 target_link_libraries(hello-libs
                       android
