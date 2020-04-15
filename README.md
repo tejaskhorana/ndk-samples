@@ -1,3 +1,28 @@
+The following is a repository of different project that utilize the Android Native Development kit, which enables us to implement parts of an app in native C/C++ code. I am hoping to track my progress in integrating the Clarius APIs, written in C++ and provided as a shared object file, in an Android application using the Android Native Development kit. There are two repositories that are interesting to look at. 
+
+1. hello-jni. This repo provides a basic idea of how we can call C/C++ code in an Android app.
+2. hello-libs. This repo provides a basic idea of how we can manage 3rd party C/C++ libraries with Android Studio. As we are only provided a shared object file (no C/C++ code), this repo is more relevant to our current use case.
+
+I am treating liblisten.so similarly to how gperf.so is treated when attempting to import this library. We see that both are provided as .so files here: 
+
+gperf.so is found here (and armeabi-v7a, x86, x86_64) hello-libs/distribution/gperf/lib/arm64-v8a/
+liblisten.so is found here (and armeabi-v7a, x86, x86_64) hello-libs/distribution/listen/lib/arm64-v8a/
+
+Note that hello-libs/distribution/listen/lib/arm64-v8a/ is full of additional QT shared object files as well. This is because without these files, this error is observed during runtime:
+
+03-18 13:08:59.210 12948 12948 E AndroidRuntime: java.lang.UnsatisfiedLinkError: dlopen failed: library "libQt5OpenGL.so" not found: needed by /data/app/~pW_8vzM6r5D_AQNwXKMKkw==/com.example.hellolibs-K3tiF92oRwA3H4cb2FAb-A==/lib/arm64/liblisten.so in namespace classloader-namespace
+
+I continually added additional additional shared object Qt dependencies until I no longer had Unsatisified Link errors. However, now I am facing this error during runtime: 
+
+JNI DETECTED ERROR IN APPLICATION: JNI NewGlobalRef called with pending exception java.lang.ClassNotFoundException: Didn't find class "org.qtproject.qt5.android.extras.QtNative" on path: DexPathList[[zip file "/data/app/~tynxHFjVuOpvGQfZMgmTA==/com.example.hello-libs-LLNtuhrtKcuc_Wjqvy9mtw==/base.apk"],nativeLibraryDirectories=[/data/app/~tynxHFjVu0pvGQfZMgmTgA==/com.example.hellolibs-LLn.....]]
+
+I have tried importing org/qtproject/qt5/android/extras/QtNative by adding this to the same directory as the other .so files to no avail. 
+
+Relevant changes thus far: https://github.com/tejaskhorana/ndk-samples/commit/cf98d545fa1f0a71e096cf1bc11e2e09073be24c
+
+
+Official Documentation Below:
+
 NDK Samples [![Build Status](https://travis-ci.org/googlesamples/android-ndk.svg?branch=master)](https://travis-ci.org/googlesamples/android-ndk) [![Build status](https://ci.appveyor.com/api/projects/status/48tbtqwg4heytmnq?svg=true)](https://ci.appveyor.com/project/proppy/android-ndk)
 ===========
 
